@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Work</title>
+</head>
+<body>
+    <h1>Update New Medicine</h1>
+    <form method="POST" action="/adwork">
+        <label for="medicinename">Medicine Name:</label>
+        <input type="text" name="medicinename" id="medicinename" placeholder="Medicine" required>
+
+        <label for="composition">Composition:</label>
+        <input type="text" name="composition" id="composition" placeholder="Composition" required>
+
+        <label for="uses">Uses:</label>
+        <input type="text" name="uses" id="uses" placeholder="Uses" required>
+
+        <label for="sideeffects">Side Effects:</label>
+        <input type="text" name="sideeffects" id="sideeffects" placeholder="Side effects" required>
+
+        <label for="image">Image URL:</label>
+        <input type="text" name="image" id="image" placeholder="Paste image URL" required>
+
+        <label for="manufacturer">Manufacturer:</label>
+        <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" required>
+
+        <input type="submit" id="submit">
+    </form>
+
+   <p>{{popmsg}}</p>
+</body>
+</html>

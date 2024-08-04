@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>aidoctor</title>
+</head>
+<body>
+<a href="/medico">search for medicine</a>
+<form method="POST" action="/aidoctor">
+    <label>AIDOCTOR:
+        <input type="text" name="inputai" id="inputai" placeholder="HOW CAN I HELP YOU" required>
+        </label>
+    <button class="submit" type="submit">Submit</button>
+</form>
+
+<p>{{full_response}}</p>
+<p>{{res}}</p>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Details</title>
+
+    <!-- Add Select2 and jQuery CDN links -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.0/dist/js/select2.min.js"></script>
+
+    <!-- Add custom JavaScript for dynamic filtering -->
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2 for the search box
+            $('#search_query').select2({
+                placeholder: 'Search for a symptom',
+                minimumInputLength: 2, // Set the minimum length before triggering the search
+                ajax: {
+                    url: '/get_symptoms',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        console.log('Search term:', params.term); // Log the search term
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        console.log('Filtered Symptoms:', data.results); // Log the filtered symptoms
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+        function filterMedicine() {
+            var selectedSymptom = $('#search_query').val().toLowerCase();
+            console.log('Selected Symptom:', selectedSymptom); // Log the selected symptom
+
+            fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: "search_query=" + selectedSymptom,
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Server Response:', data); // Log the server response
+                document.getElementById("resultContainer").innerHTML = data;
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Medicine Details</h1>
+
+    <form id="searchForm" method="post">
+        <label for="search_query">Search by Symptom:</label>
+        <input type="text" id="search_query" name="search_query">
+        <button type="button" onclick="filterMedicine()">Search</button>
+    </form>
+
+    <div id="resultContainer">
+        {% if detailed_results %}
+            {% for detail in detailed_results %}
+                <p>{{ detail }}</p>
+            {% endfor %}
+        {% elif not_found_message %}
+            <p>{{ not_found_message }}</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

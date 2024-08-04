@@ -1,0 +1,59 @@
+// App.js
+import React, { useState, useEffect } from "react";
+import "./styles.css";
+
+export default function App() {
+  const [value, setValue] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedResult, setSelectedResult] = useState(null);
+
+  const onChange = (event) => {
+    const searchTerm = event.target.value;
+    setValue(searchTerm);
+
+    // Call the Flask backend to get search results
+    fetch(`/get_symptoms?q=${searchTerm}`)
+      .then((response) => response.json())
+      .then((data) => setSearchResults(data.results))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const onSearch = () => {
+    if (selectedResult) {
+      // Perform additional actions with the selected result if needed
+      console.log("Selected result:", selectedResult);
+    }
+  };
+
+  useEffect(() => {
+    // Reset selected result when the search term changes
+    setSelectedResult(null);
+  }, [value]);
+
+  return (
+    <div class="App">
+      <h1>Search</h1>
+
+      <div class="search-container">
+        <div class="search-inner">
+          <input type="text" value={value} onChange={onChange} />
+          <button onClick={onSearch}>Search</button>
+        </div>
+        <div class="dropdown">
+          {searchResults.map((result) => (
+            <div
+              onClick={() => {
+                setValue(result);
+                setSelectedResult(result);
+              }}
+              class="dropdown-row"
+              key={result}
+            >
+              {result}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

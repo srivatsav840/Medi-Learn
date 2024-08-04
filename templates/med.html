@@ -1,0 +1,55 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search:</title>
+</head>
+<body>
+
+    <h1>Search:</h1>
+
+    <form method="POST" action="{{ url_for('meddes') }}">
+        <label for="disease_select">Select Disease:</label>
+        <input type="text" name="disease_select" id="disease_select" list="disease_list" autocomplete="off" required>
+        <datalist id="disease_list"></datalist>
+        <button type="submit">Search</button>
+    </form>
+    <a href="/aidoctor">meet AI doctor</a>
+
+    {% if results %}
+        <h2>Recomendations::</h2>
+        <ul>
+            {% for result in results %}
+                <li>{{ result | safe }}</li>
+            {% endfor %}
+        </ul>
+    {% elif error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    <script>
+        const diseaseInput = document.getElementById('disease_select');
+        const diseaseList = document.getElementById('disease_list');
+
+        diseaseInput.addEventListener('input', function () {
+            const query = diseaseInput.value.trim();
+
+            fetch(`/autocomplete?query=${query}`)
+                .then(response => response.json())
+                .then(matches => {
+                    diseaseList.innerHTML = '';
+                    matches.forEach(match => {
+                        const option = document.createElement('option');
+                        option.value = match;
+                        diseaseList.appendChild(option);
+                    });
+                });
+        });
+    </script>
+
+</body>
+</html>
